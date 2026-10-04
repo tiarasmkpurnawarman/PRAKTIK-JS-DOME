@@ -31,6 +31,10 @@ const daftarCatatan = document.getElementById("daftar-catatan");
 const jumlahCatatan = document.getElementById("jumlah-catatan");
 const pesanKosong = document.getElementById("pesan-kosong");
 
+const totalTugas = document.getElementById("total-tugas");
+const tugasSelesai = document.getElementById("tugas-selesai");
+const tugasBelumSelesai = document.getElementById("tugas-belum-selesai");
+
 // Aktivitas ke 2 manipulasi teks & style (card 1)
 // addEventListener("click", function() {...}) artinya adalah tolong dengarkan dulu / tunggu
 // sampai di klik user. jika di klik jalankan perintah dalam function
@@ -93,6 +97,13 @@ function perbaruiJumlah() {
         // Jika > 0: tambahkan class "hidden" agar teks "belum ada catatan" tersembunyi
         pesanKosong.classList.add("hidden");
     }
+
+    const semuaTugas = document.querySelectorAll(".note-item");
+    const tugasYangSelesai = document.querySelectorAll(".note-item.completed");
+
+    totalTugas.innerText = semuaTugas.length;
+    tugasSelesai.innerText = tugasYangSelesai.length;
+    tugasBelumSelesai.innerText = semuaTugas.length - tugasYangSelesai.length;
 }
 
 // Langkah 3: Fungsi Utama Logika Tambah Catatan Baru
@@ -113,10 +124,16 @@ function tambahCatatan() {
 
     // 3.4 .innerHTML = mengisi struktur didalam <li> dengan teks catatan dan tombol hapus
     // Tanda backtick (')
-    liBaru.innerHTML = `<span>${isiTeks}</span> <button class="btn-hapus">Hapus</button>`;
+    liBaru.innerHTML = `<span>${isiTeks}</span> <button class="btn-selesai">Selesai</button> <button class="btn-hapus">Hapus</button>`;
 
     // 3.5 menambahkan telinga / event listener untuk tombol hapus pada catatan dinamis
     // liBaru.querySelector(".btn-hapus") = mengambil tombol ber class "btn-hapus" khusus yang ada di li
+    const btnSelesai = liBaru.querySelector(".btn-selesai");
+        btnSelesai.addEventListener("click", function() {
+        liBaru.classList.toggle("completed");
+    perbaruiJumlah();
+});
+
     const btnHapus = liBaru.querySelector(".btn-hapus");
     btnHapus.addEventListener("click", function() {
         liBaru.remove(); // menghapus element list dari layar HTML
@@ -135,7 +152,7 @@ function tambahCatatan() {
     totalCatatan++;
     perbaruiJumlah();
 
-    console.log('Dom Catatan baru di tambahkan: ${isiTeks} ');
+    console.log(`Dom Catatan baru ditambahkan: ${isiTeks}`);
 }
 
 // Langkah 4: Event Listener Klik Tombol + "Tambah"
